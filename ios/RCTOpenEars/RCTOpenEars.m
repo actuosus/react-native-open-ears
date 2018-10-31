@@ -43,6 +43,7 @@ RCT_EXPORT_METHOD(startListening:(NSDictionary *)args)
             [[OEPocketsphinxController sharedInstance] startListeningWithLanguageModelAtPath:lmPath dictionaryAtPath:dicPath acousticModelAtPath:[OEAcousticModel pathToModel:@"AcousticModelEnglish"] languageModelIsJSGF:NO]; // Change "AcousticModelEnglish" to "AcousticModelSpanish" to perform Spanish recognition instead of English.
             
         } else {
+            [self sendEventWithName:@"startListeningError" body:[err localizedDescription]];
             NSLog(@"Error: %@",[err localizedDescription]);
         }
 }
@@ -73,30 +74,37 @@ RCT_EXPORT_METHOD(gotoSettings)
     NSLog(@"%@", hypothesis);
     NSLog(@"%@", recognitionScore);
     NSLog(@"%@", utteranceID);
+    [self sendEventWithName:@"onReceiveHypothesis" body:hypothesis];
 }
 
 - (void) pocketsphinxDidStartListening {
     NSLog(@"Pocketsphinx is now listening.");
+    [self sendEventWithName:@"onStartListening" body:nil];
 }
 
 - (void) pocketsphinxDidDetectSpeech {
     NSLog(@"Pocketsphinx has detected speech.");
+    [self sendEventWithName:@"onDetectSpeech" body:nil];
 }
 
 - (void) pocketsphinxDidDetectFinishedSpeech {
     NSLog(@"Pocketsphinx has detected a period of silence, concluding an utterance.");
+    [self sendEventWithName:@"onDetectFinishedSpeech" body:nil];
 }
 
 - (void) pocketsphinxDidStopListening {
     NSLog(@"Pocketsphinx has stopped listening.");
+    [self sendEventWithName:@"onStopListening" body:nil];
 }
 
 - (void) pocketsphinxDidSuspendRecognition {
     NSLog(@"Pocketsphinx has suspended recognition.");
+    [self sendEventWithName:@"onSuspendRecognition" body:nil];
 }
 
 - (void) pocketsphinxDidResumeRecognition {
     NSLog(@"Pocketsphinx has resumed recognition.");
+    [self sendEventWithName:@"onResumeRecognition" body:nil];
 }
 
 - (void) pocketsphinxDidChangeLanguageModelToFile:(NSString *)newLanguageModelPathAsString andDictionary:(NSString *)newDictionaryPathAsString {
@@ -105,10 +113,12 @@ RCT_EXPORT_METHOD(gotoSettings)
 
 - (void) pocketSphinxContinuousSetupDidFailWithReason:(NSString *)reasonForFailure {
     NSLog(@"Listening setup wasn't successful and returned the failure reason: %@", reasonForFailure);
+    [self sendEventWithName:@"onContinuousSetupDidFail" body:reasonForFailure];
 }
 
 - (void) pocketSphinxContinuousTeardownDidFailWithReason:(NSString *)reasonForFailure {
     NSLog(@"Listening teardown wasn't successful and returned the failure reason: %@", reasonForFailure);
+    [self sendEventWithName:@"onContinuousTeardownDidFail" body:reasonForFailure];
 }
 
 - (void) testRecognitionCompleted {
