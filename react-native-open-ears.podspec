@@ -42,9 +42,5 @@ Pod::Spec.new do |s|
     s.resource = 'ios/RCTOpenEars/Framework/AcousticModelEnglish.bundle'
   end
 
-  s.subspec 'Russian' do |ss|
-    s.resource = 'ios/RCTOpenEars/Framework/AcousticModelRussian.bundle'
-  end
-
   s.dependency 'React'
 end
