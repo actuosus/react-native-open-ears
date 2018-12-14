@@ -18,6 +18,17 @@
   "bugs": {
     "url": "https://github.com/actuosus/react-native-open-ears/issues"
   },
+  "author": {
+    "name": "Francis Knarfy Elopre",
+    "url": "https://github.com/kn4rfy"
+  },
+  "contributors": [
+    {
+      "name": "Arthur Chafonov",
+      "url": "https://github.com/actuosus",
+      "email": "actuosus@gmail.com"
+    }
+  ],
   "keywords": [
     "react-native",
     "ios",
